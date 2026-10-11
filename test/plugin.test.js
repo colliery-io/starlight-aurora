@@ -107,3 +107,14 @@ test('without hyper, the plugin leaves the components of starlight-versions alon
 	assert.equal(update.components.ThemeSelect, 'starlight-versions/overrides/ThemeSelect.astro');
 });
 
+
+test('the starter and the docs install the version that package.json declares', () => {
+	const pkg = JSON.parse(readFileSync(new URL('../package.json', import.meta.url), 'utf8'));
+	const tag = `v${pkg.version}`;
+	const starter = JSON.parse(readFileSync(new URL('../template/docs/package.json', import.meta.url), 'utf8'));
+	assert.equal(starter.dependencies['starlight-aurora'], `github:colliery-io/starlight-aurora#${tag}`);
+	for (const file of ['../README.md', '../template/README.md', '../docs/src/content/docs/how-to/install-theme.md']) {
+		const text = readFileSync(new URL(file, import.meta.url), 'utf8');
+		for (const m of text.matchAll(/starlight-aurora#(v[\d.]+)/g)) assert.equal(m[1], tag, file);
+	}
+});

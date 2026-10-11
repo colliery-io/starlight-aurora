@@ -50,7 +50,8 @@ def docs_build():
     about="serve the docs site with live reload",
     tool=angreal.ToolDescription(
         "Serves the docs site at http://localhost:4321 and reloads on each "
-        "change. Runs until stopped.",
+        "change. In a terminal it runs until Ctrl+C. From a script or an agent, "
+        "Astro runs it in the background: stop it with `npx astro dev stop` in docs/.",
         risk_level="safe",
     ),
 )

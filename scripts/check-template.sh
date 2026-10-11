@@ -25,21 +25,25 @@ node -e '
   fs.writeFileSync(p, JSON.stringify(pkg, null, 2));
 ' "$ROOT"
 
+# As the workflow does on a pull request: both variables set, both empty.
+export DOCS_SITE= DOCS_BASE=
 if command -v angreal >/dev/null; then
-  echo "build: angreal docs build"
+  echo "build: angreal docs build (DOCS_SITE and DOCS_BASE empty, as on a pull request)"
   angreal docs build
 else
-  echo "build: npm (no angreal)"
+  echo "build: npm (no angreal; DOCS_SITE and DOCS_BASE empty, as on a pull request)"
   (cd docs && npm install --no-audit --no-fund && npm run build)
 fi
 
 node "$ROOT/scripts/check-build.mjs" docs/dist
+node "$ROOT/scripts/check-links.mjs" docs/dist
 (cd "$ROOT" && node scripts/check-site.mjs "$WORK/docs/dist")
 
-# Under a Pages base path, the links of the home page keep the base.
-(cd docs && DOCS_SITE=https://example.github.io DOCS_BASE=/project npx astro build >/dev/null)
+# As the workflow does on main: under a Pages base path.
+(cd docs && DOCS_SITE=https://example.github.io DOCS_BASE=/project npx astro build --outDir dist-base >/dev/null)
+node "$ROOT/scripts/check-links.mjs" docs/dist-base --base /project/
 for href in /project/tutorials/first-steps/ /project/how-to/example/ /project/reference/ /project/explanation/; do
-  grep -q "href=\"$href\"" docs/dist/index.html || { echo "base path: no link to $href" >&2; exit 1; }
+  grep -q "href=\"$href\"" docs/dist-base/index.html || { echo "base path: no link to $href" >&2; exit 1; }
 done
 echo "base path: the home page links keep /project/"
 

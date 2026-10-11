@@ -3,7 +3,7 @@
 //  - Starlight's background and body font are Aurora's.
 // It writes a screenshot of each page in each theme to screenshots/.
 //
-//   node scripts/check-site.mjs docs/dist [--hyper]
+//   node scripts/check-site.mjs docs/dist [--hyper] [--versions] [--base /project/]
 import { createServer } from 'node:http';
 import { mkdir, readdir, readFile, stat } from 'node:fs/promises';
 import { extname, join, normalize } from 'node:path';
@@ -14,7 +14,11 @@ const require = createRequire(import.meta.url);
 const AXE = await readFile(require.resolve('axe-core/axe.min.js'), 'utf8');
 
 const args = process.argv.slice(2);
-const dist = args.find((a) => !a.startsWith('--')) ?? 'docs/dist';
+const baseAt = args.indexOf('--base');
+// The URL path that the site is built for (DOCS_BASE), e.g. /project/.
+let BASE = baseAt >= 0 ? args[baseAt + 1] : '/';
+if (!BASE.endsWith('/')) BASE += '/';
+const dist = args.find((a, i) => !a.startsWith('--') && i !== baseAt + 1) ?? 'docs/dist';
 // Each case: the stored choice, the OS setting, and the theme that must show.
 const themes = [
 	{ name: 'light', stored: 'light', os: 'dark', shows: 'light' },
@@ -26,7 +30,9 @@ const themes = [
 const TYPES = { '.html': 'text/html', '.css': 'text/css', '.js': 'text/javascript', '.svg': 'image/svg+xml', '.json': 'application/json', '.wasm': 'application/wasm' };
 
 async function resolveFile(urlPath) {
-	let path = join(dist, normalize(decodeURIComponent(urlPath.split('?')[0])));
+	let rel = decodeURIComponent(urlPath.split('?')[0]);
+	if (rel.startsWith(BASE)) rel = '/' + rel.slice(BASE.length);
+	let path = join(dist, normalize(rel));
 	if ((await stat(path).catch(() => null))?.isDirectory()) path = join(path, 'index.html');
 	return path;
 }
@@ -48,8 +54,8 @@ const base = `http://127.0.0.1:${server.address().port}`;
 async function pages() {
 	const out = [];
 	for (const entry of await readdir(dist, { recursive: true })) {
-		if (entry === 'index.html') out.push('/');
-		else if (entry.endsWith('/index.html')) out.push(`/${entry.slice(0, -'index.html'.length)}`);
+		if (entry === 'index.html') out.push(BASE);
+		else if (entry.endsWith('/index.html')) out.push(`${BASE}${entry.slice(0, -'index.html'.length)}`);
 	}
 	return out.sort();
 }
@@ -110,8 +116,10 @@ try {
 			}
 			await page.addScriptTag({ content: AXE });
 			const axe = await page.evaluate(() => axe.run(document, { runOnly: ['color-contrast'] }));
-			const name = `${theme.name}${path.replace(/\/$/, '').replace(/\//g, '_') || '_index'}.png`;
-			await page.screenshot({ path: join('screenshots', name), fullPage: true });
+			const name = `${theme.name}${path.slice(BASE.length - 1).replace(/\/$/, '').replace(/\//g, '_') || '_index'}.png`;
+			// The top of the page, up to 4000 px: a whole long page is a very large file.
+			const height = Math.min(await page.evaluate(() => document.documentElement.scrollHeight), 4000);
+			await page.screenshot({ path: join('screenshots', name), fullPage: true, clip: { x: 0, y: 0, width: 1280, height } });
 
 			const problems = [];
 			if (shown !== theme.shows) problems.push(`data-theme is ${shown}, not ${theme.shows}`);
@@ -199,7 +207,7 @@ if (args.includes('--versions')) {
 		const page = await browser3.newPage();
 		for (const theme of ['light', 'dark', ...(args.includes('--hyper') ? ['hyper'] : [])]) {
 			await page.addInitScript((t) => localStorage.setItem('starlight-theme', t), theme);
-			await page.goto(base3 + '/', { waitUntil: 'networkidle' });
+			await page.goto(base3 + BASE, { waitUntil: 'networkidle' });
 			const found = await page.evaluate(() => ({
 				versions: [...document.querySelectorAll('starlight-version-select option')].map((o) => o.textContent.trim()),
 				themes: document.querySelectorAll('starlight-theme-select select').length,

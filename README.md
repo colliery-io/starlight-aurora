@@ -11,7 +11,7 @@ theme, hyper on).
 Install the theme from git. Use a tag:
 
 ```sh
-npm install github:colliery-io/starlight-aurora#v0.1.0
+npm install github:colliery-io/starlight-aurora#v0.2.0
 ```
 
 Add the plugin to `astro.config.mjs`:
@@ -73,6 +73,12 @@ Aurora's statuses choose their hue: running (ice), completed (ok), failed
 skipped (skip). Another status is muted. `hue` sets the hue: ice, teal,
 violet, gold, ok, bad, skip or muted.
 
+## Moving from mdBook
+
+`starlight-aurora/mdbook-redirects` is an Astro integration that writes a
+redirect page at each old mdBook address (`<path>.html`). See
+https://colliery-io.github.io/starlight-aurora/how-to/move-from-mdbook/.
+
 ## Aurora CSS
 
 `vendor/aurora/` holds the CSS of Aurora at one tag. See
@@ -86,6 +92,7 @@ npm run check:vendor     # vendored CSS matches the Aurora tag
 npm --prefix docs ci     # install the docs site
 npm run docs:dev         # serve the docs site
 npm run docs:build && npm run docs:check   # needs Chrome
+node scripts/check-links.mjs docs/dist     # internal links and anchors
 scripts/check-template.sh                  # the starter, end to end
 ```
 
