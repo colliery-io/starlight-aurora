@@ -6,8 +6,10 @@ import starlightVersions from 'starlight-versions';
 
 // The Pages workflow sets DOCS_SITE and DOCS_BASE. Locally the site is at /.
 export default defineConfig({
-	site: process.env.DOCS_SITE,
+	site: process.env.DOCS_SITE || undefined,
 	base: process.env.DOCS_BASE || '/',
+	// Mermaid is one large chunk, loaded only on a page with a diagram.
+	vite: { build: { chunkSizeWarningLimit: 4096 } },
 	integrations: [
 		mermaid({ theme: 'dark', autoTheme: true }),
 		starlight({

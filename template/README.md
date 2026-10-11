@@ -42,14 +42,30 @@ You need Node 22 or later.
    angreal docs serve    # or: cd docs && npm run dev
    ```
 
+   In a terminal, the server runs until you stop it with Ctrl+C. From a
+   script or an agent, Astro starts it in the background: stop it with
+   `npx astro dev stop` in `docs/`.
+
 6. On GitHub, set Settings → Pages → Source to "GitHub Actions".
+7. Commit `docs/package-lock.json`. The workflow then uses `npm ci`, and each
+   build is the same. In the lockfile, the theme is a git commit of its tag.
+8. Change `docs/public/favicon.svg` to the project's icon, or keep Aurora's.
+
+## Warnings you can ignore
+
+Each build prints these. They are expected:
+
+- `Entry docs → 404 was not found.` Starlight uses its own 404 page.
+- `The Sitemap integration requires the site astro.config option.` Only on a
+  local build and on a pull request, where `DOCS_SITE` is empty. On `main` the
+  workflow sets it.
 
 ## The theme version
 
 `docs/package.json` installs the theme from a tag:
 
 ```json
-"starlight-aurora": "github:colliery-io/starlight-aurora#v0.1.0"
+"starlight-aurora": "github:colliery-io/starlight-aurora#v0.2.0"
 ```
 
 To update the theme, change the tag and run `npm install` in `docs/`.
@@ -62,6 +78,10 @@ To offer Aurora's hyper theme, give the plugin the option `hyper: true` in
 ```js
 plugins: [starlightAurora({ hyper: true })],
 ```
+
+## Move a book from mdBook
+
+See https://colliery-io.github.io/starlight-aurora/how-to/move-from-mdbook/.
 
 ## Versioned docs
 
