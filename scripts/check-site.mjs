@@ -5,7 +5,7 @@
 //
 //   node scripts/check-site.mjs demo/dist [--hyper]
 import { createServer } from 'node:http';
-import { mkdir, readFile, stat } from 'node:fs/promises';
+import { mkdir, readdir, readFile, stat } from 'node:fs/promises';
 import { extname, join, normalize } from 'node:path';
 import { createRequire } from 'node:module';
 import { chromium } from 'playwright-core';
@@ -44,10 +44,14 @@ const server = createServer(async (req, res) => {
 await new Promise((r) => server.listen(0, '127.0.0.1', r));
 const base = `http://127.0.0.1:${server.address().port}`;
 
+// Each page: each index.html under dist, but not the 404 page.
 async function pages() {
-	const sitemap = await readFile(join(dist, 'sitemap-0.xml'), 'utf8').catch(() => null);
-	if (sitemap) return [...sitemap.matchAll(/<loc>[^<]*?(\/[^<]*)<\/loc>/g)].map((m) => new URL(m[1], base).pathname);
-	return ['/'];
+	const out = [];
+	for (const entry of await readdir(dist, { recursive: true })) {
+		if (entry === 'index.html') out.push('/');
+		else if (entry.endsWith('/index.html')) out.push(`/${entry.slice(0, -'index.html'.length)}`);
+	}
+	return out.sort();
 }
 
 const browser = await chromium.launch({ channel: 'chrome' });

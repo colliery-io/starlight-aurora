@@ -29,6 +29,8 @@ jobs:
         run: |
           (cd demo && AURORA_HYPER=1 npx astro build --outDir dist-hyper)
           npm run demo:check:hyper
+      - name: The starter in template/ builds and passes the checks
+        run: scripts/check-template.sh
       - name: Screenshots
         if: always()
         uses: actions/upload-artifact@v4

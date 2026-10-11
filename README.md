@@ -46,6 +46,28 @@ hyper, code blocks use the dark code theme.
   `expressiveCode.styleOverrides` win.
 - Your own `customCss` loads after the theme, so it wins.
 
+## Starter
+
+`template/` is a docs site to copy into a repository: the theme, the Diátaxis
+sections, Mermaid, an angreal task and a Pages workflow. See
+[template/README.md](template/README.md).
+
+## Components
+
+`StatusBadge` is Aurora's status badge. Import it in an MDX page:
+
+```mdx
+import StatusBadge from 'starlight-aurora/components/StatusBadge.astro';
+
+<StatusBadge status="running" />
+<StatusBadge status="healthy" hue="ok" />
+```
+
+Aurora's statuses choose their hue: running (ice), completed (ok), failed
+(bad), scheduled (violet), pending and paused (muted), cancelled (gold),
+skipped (skip). Another status is muted. `hue` sets the hue: ice, teal,
+violet, gold, ok, bad, skip or muted.
+
 ## Aurora CSS
 
 `vendor/aurora/` holds the CSS of Aurora at one tag. See
@@ -59,6 +81,7 @@ npm run check:vendor     # vendored CSS matches the Aurora tag
 npm --prefix demo ci     # install the demo site
 npm run demo:dev         # serve the demo site
 npm run demo:build && npm run demo:check   # needs Chrome
+scripts/check-template.sh                  # the starter, end to end
 ```
 
 ## Licence
