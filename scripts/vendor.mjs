@@ -6,6 +6,7 @@
 import { execFileSync } from 'node:child_process';
 import { readFile, writeFile } from 'node:fs/promises';
 import { fileURLToPath } from 'node:url';
+import { isMain } from './cli.mjs';
 import { join } from 'node:path';
 
 const VENDOR_DIR = fileURLToPath(new URL('../vendor/aurora/', import.meta.url));
@@ -70,7 +71,7 @@ async function update(tag) {
 	console.log(`vendor/aurora is now ${source.repo}@${tag} (${commit.slice(0, 7)})`);
 }
 
-if (process.argv[1] === fileURLToPath(import.meta.url)) {
+if (isMain(import.meta.url)) {
 	const [cmd, arg] = process.argv.slice(2);
 	const run = cmd === 'check' ? check() : cmd === 'update' ? update(arg) : Promise.reject(new Error('usage: vendor.mjs check | update <tag>'));
 	run.catch((err) => {

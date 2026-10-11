@@ -37,7 +37,9 @@ fi
 
 node "$ROOT/scripts/check-build.mjs" docs/dist
 node "$ROOT/scripts/check-links.mjs" docs/dist
-(cd "$ROOT" && node scripts/check-site.mjs "$WORK/docs/dist")
+# The Chrome check must check the starter's pages, not this repository's docs.
+(cd "$ROOT" && node scripts/check-site.mjs "$WORK/docs/dist") | tee "$WORK/site.log"
+grep -q ' /how-to/example/$' "$WORK/site.log" || { echo "check-site did not check the starter's pages" >&2; exit 1; }
 
 # As the workflow does on main: under a Pages base path.
 (cd docs && DOCS_SITE=https://example.github.io DOCS_BASE=/project npx astro build --outDir dist-base >/dev/null)

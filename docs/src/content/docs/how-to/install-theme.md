@@ -13,7 +13,7 @@ Use this guide when the site uses Starlight already. For a new site, use
 1. Install the theme from its tag:
 
    ```sh
-   npm install github:colliery-io/starlight-aurora#v0.2.0
+   npm install github:colliery-io/starlight-aurora#v0.2.1
    ```
 
 2. In `astro.config.mjs`, add the plugin to Starlight:

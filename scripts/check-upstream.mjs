@@ -11,6 +11,7 @@ import { mkdtempSync, readFileSync, rmSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { isMain } from './cli.mjs';
 
 const RECORD = fileURLToPath(new URL('../components/upstream.json', import.meta.url));
 
@@ -42,7 +43,7 @@ function releaseFiles(pkg, version, files) {
 	}
 }
 
-if (process.argv[1] === fileURLToPath(import.meta.url)) {
+if (isMain(import.meta.url)) {
 	const record = JSON.parse(readFileSync(RECORD, 'utf8'));
 	const version = process.argv[2] ?? execFileSync('npm', ['view', record.package, 'version'], { encoding: 'utf8' }).trim();
 	const bad = changed(record, releaseFiles(record.package, version, Object.keys(record.files)));
