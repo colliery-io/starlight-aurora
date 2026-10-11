@@ -7,4 +7,8 @@ export interface AuroraOptions {
 
 export function auroraCss(options?: AuroraOptions): string[];
 
+export const codeStyleOverrides: Record<string, string>;
+
+export function auroraExpressiveCode(userConfig: unknown): unknown;
+
 export default function starlightAurora(options?: AuroraOptions): StarlightPlugin;

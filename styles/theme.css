@@ -1,0 +1,113 @@
+/* Starlight's variables, from Aurora's tokens.
+ *
+ * Aurora's colour tokens are light-dark() pairs, chosen by color-scheme, and
+ * Aurora's tokens.css sets color-scheme from the data-theme attribute that
+ * Starlight already writes on <html>. So one mapping serves the light theme,
+ * the dark theme, and hyper (which sets the same tokens). This file has no
+ * raw colours: each value is an Aurora token.
+ *
+ * Not in a layer, so it beats Starlight's starlight.base, and the site's own
+ * CSS (after it in customCss) beats it.
+ */
+:root,
+:root[data-theme='light'],
+:root[data-theme='dark'],
+::backdrop {
+	/* Starlight's grey scale: white is the strongest text, black the page. */
+	--sl-color-white: var(--fg-bright);
+	--sl-color-gray-1: var(--fg-strong);
+	--sl-color-gray-2: var(--fg-2);
+	--sl-color-gray-3: var(--muted);
+	--sl-color-gray-4: var(--faint);
+	--sl-color-gray-5: var(--border);
+	--sl-color-gray-6: var(--sidebar);
+	--sl-color-gray-7: var(--panel-2);
+	--sl-color-black: var(--bg);
+
+	/* Accent: Aurora's ice. -low is a fill, -high is text on that fill. */
+	--sl-color-accent-low: var(--ice-bg);
+	--sl-color-accent: var(--ice);
+	--sl-color-accent-high: var(--ice-fg);
+
+	/* Hues, by role: blue = ice (note), purple = violet (tip),
+	   orange = gold (caution), red = bad (danger), green = ok (success). */
+	--sl-color-blue-low: var(--ice-bg);
+	--sl-color-blue: var(--ice);
+	--sl-color-blue-high: var(--ice-fg);
+	--sl-color-purple-low: var(--violet-bg);
+	--sl-color-purple: var(--violet);
+	--sl-color-purple-high: var(--violet-fg);
+	--sl-color-orange-low: var(--gold-bg);
+	--sl-color-orange: var(--gold);
+	--sl-color-orange-high: var(--gold-fg);
+	--sl-color-red-low: var(--bad-bg);
+	--sl-color-red: var(--bad);
+	--sl-color-red-high: var(--bad-fg);
+	--sl-color-green-low: var(--ok-bg);
+	--sl-color-green: var(--ok);
+	--sl-color-green-high: var(--ok-fg);
+
+	/* Roles. */
+	--sl-color-text: var(--fg);
+	--sl-color-text-accent: var(--ice);
+	--sl-color-text-invert: var(--on-accent);
+	--sl-color-bg: var(--bg);
+	--sl-color-bg-nav: var(--sidebar);
+	--sl-color-bg-sidebar: var(--sidebar);
+	--sl-color-bg-inline-code: var(--inset);
+	--sl-color-bg-accent: var(--ice);
+	--sl-color-hairline-light: var(--border-soft);
+	--sl-color-hairline: var(--border);
+	--sl-color-hairline-shade: var(--border);
+	--sl-color-backdrop-overlay: var(--scrim);
+
+	--sl-shadow-sm: var(--shadow-sm);
+	--sl-shadow-md: var(--shadow-md);
+	--sl-shadow-lg: var(--shadow-lg);
+
+	/* Type: Aurora's IBM Plex. */
+	--sl-font: var(--font-sans);
+	--sl-font-mono: var(--font-mono);
+}
+
+/* What the variables do not reach. */
+
+/* Asides: Aurora's tinted fill with its rounded panel. */
+.starlight-aside {
+	border-radius: var(--radius-md);
+}
+
+/* Cards and link cards: Aurora panels. */
+.card,
+.sl-link-card {
+	background: var(--panel);
+	border-color: var(--border);
+	border-radius: var(--radius-panel);
+}
+
+/* Tables: a panel header and Aurora's borders. */
+.sl-markdown-content :is(th, td) {
+	border-color: var(--border);
+}
+.sl-markdown-content th {
+	background: var(--panel-2);
+	color: var(--fg-strong);
+}
+
+/* Inline code: Aurora's inset with its small radius. */
+.sl-markdown-content :not(pre) > code {
+	border-radius: var(--radius-sm);
+}
+
+/* Badges: Aurora's pill radius. */
+.sl-badge {
+	border-radius: var(--radius-pill);
+}
+
+/* Text selection and focus in the accent. */
+::selection {
+	background: var(--ice-bg);
+}
+:focus-visible {
+	outline-color: var(--ice);
+}

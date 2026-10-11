@@ -28,6 +28,10 @@
     "vendor:update": "node scripts/vendor.mjs update",
     "demo:build": "npm --prefix demo run build",
     "demo:dev": "npm --prefix demo run dev",
-    "demo:check": "node scripts/check-build.mjs demo/dist"
+    "demo:check": "node scripts/check-build.mjs demo/dist && node scripts/check-site.mjs demo/dist"
+  },
+  "devDependencies": {
+    "axe-core": "^4.14.0",
+    "playwright-core": "^1.64.0"
   }
 }
