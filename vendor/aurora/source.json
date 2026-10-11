@@ -1,0 +1,7 @@
+{
+  "repo": "colliery-io/aurora",
+  "tag": "v0.5.0",
+  "commit": "a3122a7177baf8a1879e64bf4d3fcb77ed2800a8",
+  "path": "aurora-leptos/style",
+  "files": ["tokens.css", "fonts.css", "hyper.css"]
+}

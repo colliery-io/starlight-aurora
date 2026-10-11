@@ -1,0 +1,33 @@
+{
+  "name": "starlight-aurora",
+  "version": "0.1.0",
+  "description": "Aurora, the Colliery design system, as an Astro Starlight theme",
+  "license": "Apache-2.0",
+  "repository": "github:colliery-io/starlight-aurora",
+  "type": "module",
+  "exports": {
+    ".": {
+      "types": "./index.d.ts",
+      "default": "./index.js"
+    },
+    "./styles/*": "./styles/*",
+    "./vendor/*": "./vendor/*"
+  },
+  "files": [
+    "index.js",
+    "index.d.ts",
+    "styles",
+    "vendor"
+  ],
+  "peerDependencies": {
+    "@astrojs/starlight": ">=0.42.0"
+  },
+  "scripts": {
+    "test": "node --test test/*.test.js",
+    "check:vendor": "node scripts/vendor.mjs check",
+    "vendor:update": "node scripts/vendor.mjs update",
+    "demo:build": "npm --prefix demo run build",
+    "demo:dev": "npm --prefix demo run dev",
+    "demo:check": "node scripts/check-build.mjs demo/dist"
+  }
+}
