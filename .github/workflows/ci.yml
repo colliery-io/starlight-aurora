@@ -19,16 +19,12 @@ jobs:
         run: npm test
       - name: Vendored Aurora CSS matches its tag
         run: npm run check:vendor
-      - name: Build the demo site
+      - name: Build the docs site
         run: |
-          npm --prefix demo ci --no-audit --no-fund
-          npm run demo:build
-      - name: Check the demo site in Chrome (layers, tokens, contrast)
-        run: npm run demo:check
-      - name: Build and check the demo site with hyper
-        run: |
-          (cd demo && AURORA_HYPER=1 npx astro build --outDir dist-hyper)
-          npm run demo:check:hyper
+          npm --prefix docs ci --no-audit --no-fund
+          npm run docs:build
+      - name: Check the docs site in Chrome (layers, tokens, contrast, hyper)
+        run: npm run docs:check
       - name: The starter in template/ builds and passes the checks
         run: scripts/check-template.sh
       - name: Screenshots

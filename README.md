@@ -3,6 +3,9 @@
 Aurora, the Colliery design system, as a theme for
 [Astro Starlight](https://starlight.astro.build). The Colliery docs use it.
 
+The docs: https://colliery-io.github.io/starlight-aurora/ (built with the
+theme, hyper on).
+
 ## Install
 
 Install the theme from git. Use a tag:
@@ -78,9 +81,9 @@ violet, gold, ok, bad, skip or muted.
 ```sh
 npm test                 # unit tests
 npm run check:vendor     # vendored CSS matches the Aurora tag
-npm --prefix demo ci     # install the demo site
-npm run demo:dev         # serve the demo site
-npm run demo:build && npm run demo:check   # needs Chrome
+npm --prefix docs ci     # install the docs site
+npm run docs:dev         # serve the docs site
+npm run docs:build && npm run docs:check   # needs Chrome
 scripts/check-template.sh                  # the starter, end to end
 ```
 

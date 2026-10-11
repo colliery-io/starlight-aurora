@@ -1,0 +1,55 @@
+---
+title: Components
+description: The components of starlight-aurora.
+sidebar:
+  order: 2
+---
+
+import StatusBadge from 'starlight-aurora/components/StatusBadge.astro';
+
+## StatusBadge
+
+```mdx
+import StatusBadge from 'starlight-aurora/components/StatusBadge.astro';
+
+<StatusBadge status="running" />
+<StatusBadge status="healthy" hue="ok" />
+```
+
+Aurora's status badge: the status in lowercase mono, on the fill of its hue.
+
+### Props
+
+| Prop | Type | Required | What it does |
+|---|---|---|---|
+| `status` | string | yes | The text of the badge. Aurora's statuses choose their hue. |
+| `hue` | `ice`, `teal`, `violet`, `gold`, `ok`, `bad`, `skip`, `muted` | no | Sets the hue. An unknown hue stops the build. |
+
+### Statuses
+
+Statuses are not case-sensitive. A status that is not in this table is muted.
+
+| Status | Hue | Badge |
+|---|---|---|
+| running | ice | <StatusBadge status="running" /> |
+| completed | ok | <StatusBadge status="completed" /> |
+| failed | bad | <StatusBadge status="failed" /> |
+| scheduled | violet | <StatusBadge status="scheduled" /> |
+| pending | muted | <StatusBadge status="pending" /> |
+| paused | muted | <StatusBadge status="paused" /> |
+| cancelled, canceled | gold | <StatusBadge status="cancelled" /> |
+| skipped | skip | <StatusBadge status="skipped" /> |
+| any other | muted | <StatusBadge status="unknown" /> |
+
+### Hues
+
+| Hue | Badge |
+|---|---|
+| ice | <StatusBadge status="ice" hue="ice" /> |
+| teal | <StatusBadge status="teal" hue="teal" /> |
+| violet | <StatusBadge status="violet" hue="violet" /> |
+| gold | <StatusBadge status="gold" hue="gold" /> |
+| ok | <StatusBadge status="ok" hue="ok" /> |
+| bad | <StatusBadge status="bad" hue="bad" /> |
+| skip | <StatusBadge status="skip" hue="skip" /> |
+| muted | <StatusBadge status="muted" hue="muted" /> |
