@@ -11,7 +11,7 @@ theme, hyper on).
 Install the theme from git. Use a tag:
 
 ```sh
-npm install github:colliery-io/starlight-aurora#v0.2.0
+npm install github:colliery-io/starlight-aurora#v0.2.1
 ```
 
 Add the plugin to `astro.config.mjs`:

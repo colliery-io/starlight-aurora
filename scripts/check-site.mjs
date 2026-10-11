@@ -9,16 +9,13 @@ import { mkdir, readdir, readFile, stat } from 'node:fs/promises';
 import { extname, join, normalize } from 'node:path';
 import { createRequire } from 'node:module';
 import { chromium } from 'playwright-core';
+import { parseArgs } from './cli.mjs';
 
 const require = createRequire(import.meta.url);
 const AXE = await readFile(require.resolve('axe-core/axe.min.js'), 'utf8');
 
-const args = process.argv.slice(2);
-const baseAt = args.indexOf('--base');
-// The URL path that the site is built for (DOCS_BASE), e.g. /project/.
-let BASE = baseAt >= 0 ? args[baseAt + 1] : '/';
-if (!BASE.endsWith('/')) BASE += '/';
-const dist = args.find((a, i) => !a.startsWith('--') && i !== baseAt + 1) ?? 'docs/dist';
+const { dist, base: BASE, flags } = parseArgs(process.argv.slice(2));
+const args = [...flags].map((f) => `--${f}`);
 // Each case: the stored choice, the OS setting, and the theme that must show.
 const themes = [
 	{ name: 'light', stored: 'light', os: 'dark', shows: 'light' },

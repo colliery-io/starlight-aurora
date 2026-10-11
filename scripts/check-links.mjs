@@ -5,7 +5,7 @@
 //   node scripts/check-links.mjs docs/dist [--base /project/]
 import { existsSync, readdirSync, readFileSync, statSync } from 'node:fs';
 import { join } from 'node:path';
-import { fileURLToPath } from 'node:url';
+import { isMain, parseArgs } from './cli.mjs';
 
 const ATTR = /\s(?:href|src)\s*=\s*"([^"]*)"/g;
 const REFRESH = /http-equiv="refresh"\s+content="[^"]*url=([^"]+)"/gi;
@@ -68,12 +68,8 @@ export function checkSite(dist, base = '/') {
 	return { pages: files.length, checked, errors };
 }
 
-if (process.argv[1] === fileURLToPath(import.meta.url)) {
-	const args = process.argv.slice(2);
-	const dist = args.find((a) => !a.startsWith('--') && args[args.indexOf(a) - 1] !== '--base') ?? 'docs/dist';
-	const i = args.indexOf('--base');
-	let base = i >= 0 ? args[i + 1] : '/';
-	if (!base.endsWith('/')) base += '/';
+if (isMain(import.meta.url)) {
+	const { dist, base } = parseArgs(process.argv.slice(2));
 	const { pages, checked, errors } = checkSite(dist, base);
 	for (const e of errors.slice(0, 50)) console.log(`  ${e}`);
 	if (errors.length > 50) console.log(`  … and ${errors.length - 50} more`);

@@ -65,7 +65,7 @@ Each build prints these. They are expected:
 `docs/package.json` installs the theme from a tag:
 
 ```json
-"starlight-aurora": "github:colliery-io/starlight-aurora#v0.2.0"
+"starlight-aurora": "github:colliery-io/starlight-aurora#v0.2.1"
 ```
 
 To update the theme, change the tag and run `npm install` in `docs/`.
