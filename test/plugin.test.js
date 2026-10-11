@@ -80,3 +80,27 @@ test('hyper on replaces the theme provider and select, and keeps the site compon
 test('hyper on and a site ThemeSelect of its own is an error', () => {
 	assert.throws(() => setup(starlightAurora({ hyper: true }), { components: { ThemeSelect: './x.astro' } }), /ThemeSelect/);
 });
+
+// The name that starlight-versions 0.10 gives itself.
+const versionsPlugin = { name: 'starlight-versions-plugin', hooks: {} };
+
+test('with hyper and starlight-versions, the theme select also shows the versions', () => {
+	const update = setup(starlightAurora({ hyper: true }), { plugins: [versionsPlugin] });
+	assert.equal(update.components.ThemeSelect, 'starlight-aurora/components/ThemeSelectVersions.astro');
+	assert.ok(existsSync(pkgFile(update.components.ThemeSelect)));
+});
+
+test('with hyper, the plugin takes over the ThemeSelect that starlight-versions set first', () => {
+	const update = setup(starlightAurora({ hyper: true }), {
+		plugins: [versionsPlugin],
+		components: { ThemeSelect: 'starlight-versions/overrides/ThemeSelect.astro', Search: 'starlight-versions/overrides/Search.astro' },
+	});
+	assert.equal(update.components.ThemeSelect, 'starlight-aurora/components/ThemeSelectVersions.astro');
+	assert.equal(update.components.Search, 'starlight-versions/overrides/Search.astro');
+});
+
+test('without hyper, the plugin leaves the components of starlight-versions alone', () => {
+	const update = setup(starlightAurora(), { plugins: [versionsPlugin], components: { ThemeSelect: 'starlight-versions/overrides/ThemeSelect.astro' } });
+	assert.equal(update.components.ThemeSelect, 'starlight-versions/overrides/ThemeSelect.astro');
+});
+

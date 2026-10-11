@@ -22,7 +22,8 @@
     "vendor"
   ],
   "peerDependencies": {
-    "@astrojs/starlight": ">=0.42.0"
+    "@astrojs/starlight": ">=0.42.0",
+    "starlight-versions": ">=0.10.0"
   },
   "scripts": {
     "test": "node --test test/*.test.js",
@@ -31,10 +32,16 @@
     "template:check": "scripts/check-template.sh",
     "docs:dev": "npm --prefix docs run dev",
     "docs:build": "npm --prefix docs run build",
-    "docs:check": "node scripts/check-build.mjs docs/dist && node scripts/check-site.mjs docs/dist --hyper"
+    "docs:check": "node scripts/check-build.mjs docs/dist && node scripts/check-site.mjs docs/dist --hyper --versions"
   },
   "devDependencies": {
     "axe-core": "^4.14.0",
-    "playwright-core": "^1.64.0"
+    "playwright-core": "^1.64.0",
+    "starlight-versions": "^0.10.1"
+  },
+  "peerDependenciesMeta": {
+    "starlight-versions": {
+      "optional": true
+    }
   }
 }

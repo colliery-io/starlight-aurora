@@ -21,7 +21,7 @@ starlightAurora({ hyper: false })
 |---|---|
 | `customCss` | Adds the theme's stylesheets before the site's own |
 | `expressiveCode.styleOverrides` | Adds Aurora's fonts and radius to code blocks. The site's own values win. With `expressiveCode: false`, nothing changes. |
-| `components` | With `hyper: true` only: replaces `ThemeProvider` and `ThemeSelect` |
+| `components` | With `hyper: true` only: replaces `ThemeProvider` and `ThemeSelect`. With starlight-versions too, the theme select also shows the version select. |
 
 ## Stylesheets
 
