@@ -45,13 +45,17 @@ while the page loads, and removes the mark when a person leaves hyper.
 
 ## Mermaid
 
-The starter uses `astro-mermaid` with `autoTheme`. It maps `light` to Mermaid's
-default theme and `dark` to Mermaid's dark theme. For a theme that it does not
-know, it uses the theme in the config. The starter sets that to `dark`, so
-hyper gets dark diagrams.
+The starter draws diagrams with `astro-mermaid`. Mermaid's own themes are
+grey or lavender, and its `base` theme takes fixed colours, not CSS variables,
+so it cannot follow the theme by itself.
 
-The edge labels of Mermaid's dark theme do not meet WCAG AA. The theme gives
-them Aurora's panel colour and text colour.
+Mermaid draws each diagram as inline SVG in the page, so the page's CSS
+reaches it. `styles/mermaid.css` sets the colours of the diagram with Aurora's
+tokens: nodes on `--panel` with a `--border-control` edge, lines in `--edge`
+(Aurora's graph-edge token), notes in gold, text in `--fg`. The rules use
+`!important`, because Mermaid scopes its own style to the diagram's id. A
+change of theme changes the diagram at once, with no redraw. The rules cover
+flowcharts, sequence, class and state diagrams.
 
 ## The starter
 

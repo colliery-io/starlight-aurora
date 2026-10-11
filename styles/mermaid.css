@@ -1,0 +1,84 @@
+/* Mermaid diagrams in Aurora's colours.
+ *
+ * Mermaid draws each diagram as inline SVG, with its own <style> scoped to the
+ * diagram's id. These rules beat that style with !important, and use Aurora's
+ * tokens, so a diagram follows the theme (light, dark, hyper) with no redraw.
+ * The selectors are the classes that Mermaid 11 gives flowcharts, sequence,
+ * class and state diagrams. Not in a layer: it must beat Mermaid's own style.
+ */
+
+/* Text. */
+pre.mermaid svg :is(text, tspan) {
+	fill: var(--fg) !important;
+}
+pre.mermaid svg :is(.nodeLabel, .edgeLabel, .label, .labelBkg) {
+	color: var(--fg) !important;
+}
+
+/* Shapes: Aurora panels with a control border. */
+pre.mermaid svg .node :is(rect, circle, ellipse, polygon),
+pre.mermaid svg .node .label-container:not(g),
+pre.mermaid svg rect.actor {
+	fill: var(--panel) !important;
+	stroke: var(--border-control) !important;
+}
+/* Class and state boxes are drawn as paths: the first fills, the rest stroke. */
+pre.mermaid svg .node g.label-container > path:first-child {
+	fill: var(--panel) !important;
+	stroke: none !important;
+}
+pre.mermaid svg .node g.label-container > path:not(:first-child),
+pre.mermaid svg .divider path {
+	fill: none !important;
+	stroke: var(--border-control) !important;
+}
+
+/* Groups. */
+pre.mermaid svg .cluster rect {
+	fill: var(--panel-2) !important;
+	stroke: var(--border) !important;
+}
+
+/* Lines: Aurora's graph edge (3:1 on panels). */
+pre.mermaid svg :is(.edgePaths path, .flowchart-link, .relation, .transition, .messageLine0, .messageLine1, .actor-line) {
+	stroke: var(--edge) !important;
+}
+pre.mermaid svg :is(marker, marker path, marker circle, marker polygon, .arrowMarkerPath) {
+	fill: var(--edge) !important;
+	stroke: var(--edge) !important;
+}
+/* Hollow markers stay hollow. */
+pre.mermaid svg :is(.aggregation, .extension, .lollipop) :is(path, circle) {
+	fill: var(--panel) !important;
+}
+
+/* Edge labels: on a panel, so they read on any line. */
+pre.mermaid svg :is(.edgeLabel, .labelBkg, .edgeLabel p, .edgeLabel span) {
+	background-color: var(--panel) !important;
+}
+pre.mermaid svg .edgeLabel rect {
+	fill: var(--panel) !important;
+}
+
+/* Notes: Aurora's gold. */
+pre.mermaid svg rect.note {
+	fill: var(--gold-bg) !important;
+	stroke: var(--gold) !important;
+}
+
+/* State start (a dot) and end (a ring around a dot, drawn as paths). */
+pre.mermaid svg .node .state-start {
+	fill: var(--fg) !important;
+	stroke: var(--fg) !important;
+}
+pre.mermaid svg .node[id*='_end'] .outer-path > path:first-child {
+	fill: var(--panel) !important;
+}
+pre.mermaid svg .node[id*='_end'] .outer-path > path:not(:first-child) {
+	fill: none !important;
+	stroke: var(--fg) !important;
+}
+pre.mermaid svg .node[id*='_end'] .outer-path > g path {
+	fill: var(--fg) !important;
+	stroke: var(--fg) !important;
+}
