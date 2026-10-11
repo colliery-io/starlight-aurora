@@ -30,5 +30,6 @@ hyper on.
 :::caution
 The two components are copies of the components of Starlight 0.42.6, with
 hyper added. A Starlight release that changes them needs a new release of
-starlight-aurora.
+starlight-aurora. CI finds such a release: see
+[Update the copied Starlight components](../starlight-update/).
 :::
