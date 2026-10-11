@@ -1,0 +1,4 @@
+/* Aurora's vendored CSS goes in a layer below Starlight's layers, so its
+   variables apply and its base rules (body, html) lose to Starlight's. This
+   file must be the first stylesheet that names a layer. */
+@layer aurora-vendor, starlight;

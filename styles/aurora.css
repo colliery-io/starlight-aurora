@@ -1,0 +1,3 @@
+/* Aurora's tokens and fonts, unedited (vendor/aurora). */
+@import '../vendor/aurora/fonts.css' layer(aurora-vendor);
+@import '../vendor/aurora/tokens.css' layer(aurora-vendor);

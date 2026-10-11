@@ -1,0 +1,2 @@
+/* Aurora's hyper theme, unedited (vendor/aurora). Loaded only with hyper: true. */
+@import '../vendor/aurora/hyper.css' layer(aurora-vendor);
