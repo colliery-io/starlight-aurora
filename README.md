@@ -46,6 +46,22 @@ hyper, code blocks use the dark code theme.
   `expressiveCode.styleOverrides` win.
 - Your own `customCss` loads after the theme, so it wins.
 
+## Components
+
+`StatusBadge` is Aurora's status badge. Import it in an MDX page:
+
+```mdx
+import StatusBadge from 'starlight-aurora/components/StatusBadge.astro';
+
+<StatusBadge status="running" />
+<StatusBadge status="healthy" hue="ok" />
+```
+
+Aurora's statuses choose their hue: running (ice), completed (ok), failed
+(bad), scheduled (violet), pending and paused (muted), cancelled (gold),
+skipped (skip). Another status is muted. `hue` sets the hue: ice, teal,
+violet, gold, ok, bad, skip or muted.
+
 ## Aurora CSS
 
 `vendor/aurora/` holds the CSS of Aurora at one tag. See

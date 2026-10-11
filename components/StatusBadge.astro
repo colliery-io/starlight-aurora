@@ -1,0 +1,37 @@
+---
+// Aurora's status badge (aurora-leptos StatusBadge): the status as a
+// lowercase mono pill, in the fill and text tokens of its hue.
+//
+//   <StatusBadge status="running" />
+//   <StatusBadge status="healthy" hue="ok" />
+import { statusHue } from './status.js';
+
+interface Props {
+	/** The text of the badge. Aurora's statuses choose their own hue. */
+	status: string;
+	/** ice, teal, violet, gold, ok, bad, skip or muted. Overrides the status's hue. */
+	hue?: 'ice' | 'teal' | 'violet' | 'gold' | 'ok' | 'bad' | 'skip' | 'muted';
+}
+
+const { status, hue } = Astro.props;
+const h = statusHue(status, hue);
+---
+
+<span class="sa-status-badge not-content" data-hue={h} style={`--sa-fill: var(--${h}-bg); --sa-text: var(--${h}-fg);`}>{status}</span>
+
+<style>
+	.sa-status-badge {
+		display: inline-block;
+		border-radius: var(--radius-pill);
+		padding: 2px 9px;
+		background: var(--sa-fill);
+		color: var(--sa-text);
+		font-family: var(--font-mono);
+		font-size: 10.5px;
+		font-weight: 500;
+		line-height: 1.5;
+		text-transform: lowercase;
+		white-space: nowrap;
+		vertical-align: middle;
+	}
+</style>
