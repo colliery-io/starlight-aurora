@@ -32,7 +32,8 @@
     "demo:dev": "npm --prefix demo run dev",
     "demo:check": "node scripts/check-build.mjs demo/dist && node scripts/check-site.mjs demo/dist",
     "demo:build:hyper": "cd demo && AURORA_HYPER=1 npx astro build --outDir dist-hyper",
-    "demo:check:hyper": "node scripts/check-build.mjs demo/dist-hyper && node scripts/check-site.mjs demo/dist-hyper --hyper"
+    "demo:check:hyper": "node scripts/check-build.mjs demo/dist-hyper && node scripts/check-site.mjs demo/dist-hyper --hyper",
+    "template:check": "scripts/check-template.sh"
   },
   "devDependencies": {
     "axe-core": "^4.14.0",

@@ -111,3 +111,15 @@
 :focus-visible {
 	outline-color: var(--ice);
 }
+
+/* Mermaid diagrams: the edge labels of Mermaid's dark theme miss AA (4.43:1).
+   Mermaid scopes its rules to the diagram's id, so these need !important. */
+pre.mermaid :is(.edgeLabel, .labelBkg) {
+	background-color: var(--panel) !important;
+	color: var(--fg) !important;
+}
+pre.mermaid .edgeLabel :is(p, span, rect) {
+	background-color: var(--panel) !important;
+	color: var(--fg) !important;
+	fill: var(--panel) !important;
+}
