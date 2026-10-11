@@ -38,7 +38,9 @@ export default defineConfig({
 
 With `hyper: true` the plugin replaces Starlight's `ThemeProvider` and
 `ThemeSelect`. A site that replaces either of them too gets an error. Under
-hyper, code blocks use the dark code theme.
+hyper, code blocks use the dark code theme. The plugin works with
+[starlight-versions](https://starlight-versions.vercel.app): with hyper on,
+its theme select also shows the version select.
 
 ## What the theme does
 

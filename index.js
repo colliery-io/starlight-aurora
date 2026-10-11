@@ -12,14 +12,28 @@ export function auroraCss(options = {}) {
 	return css;
 }
 
-/** Starlight components that the plugin replaces. Only hyper needs any. */
-export function auroraComponents(options = {}) {
+/**
+ * Starlight components that the plugin replaces. Only hyper needs any. With
+ * starlight-versions too, the theme select also shows the version select.
+ */
+export function auroraComponents(options = {}, { versions = false } = {}) {
 	if (!options.hyper) return {};
 	return {
 		ThemeProvider: `${PKG}/components/ThemeProvider.astro`,
-		ThemeSelect: `${PKG}/components/ThemeSelect.astro`,
+		ThemeSelect: `${PKG}/components/${versions ? 'ThemeSelectVersions' : 'ThemeSelect'}.astro`,
 	};
 }
+
+/** The names that the starlight-versions plugin gives itself. */
+const VERSIONS_PLUGIN = new Set(['starlight-versions-plugin', 'starlight-versions']);
+
+/** True when the site also uses the starlight-versions plugin. */
+export function usesVersions(config) {
+	return (config.plugins ?? []).some((p) => VERSIONS_PLUGIN.has(p?.name));
+}
+
+/** A component that starlight-versions set, which the plugin may take over. */
+const fromVersions = (path) => typeof path === 'string' && path.startsWith('starlight-versions/');
 
 /** Code-block styles from Aurora's tokens. The site's own overrides win. */
 export const codeStyleOverrides = {
@@ -53,9 +67,10 @@ export default function starlightAurora(options = {}) {
 		name: PKG,
 		hooks: {
 			'config:setup'({ config, updateConfig }) {
-				const components = auroraComponents(opts);
+				const components = auroraComponents(opts, { versions: usesVersions(config) });
 				for (const name of Object.keys(components)) {
-					if (config.components?.[name]) {
+					const theirs = config.components?.[name];
+					if (theirs && !fromVersions(theirs)) {
 						throw new Error(`starlight-aurora: hyper replaces the ${name} component, and the site replaces it too. Remove one.`);
 					}
 				}

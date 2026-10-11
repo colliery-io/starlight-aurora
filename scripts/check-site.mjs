@@ -150,6 +150,44 @@ if (args.includes('--hyper')) {
 	failures += problems.length;
 }
 
+// The version select of starlight-versions: it is there with the theme
+// select, it lists the versions, and choosing one goes to its pages.
+if (args.includes('--versions')) {
+	const browser3 = await chromium.launch({ channel: 'chrome' });
+	const server3 = createServer(server.listeners('request')[0]);
+	await new Promise((r) => server3.listen(0, '127.0.0.1', r));
+	const base3 = `http://127.0.0.1:${server3.address().port}`;
+	const problems = [];
+	try {
+		const page = await browser3.newPage();
+		for (const theme of ['light', 'dark', ...(args.includes('--hyper') ? ['hyper'] : [])]) {
+			await page.addInitScript((t) => localStorage.setItem('starlight-theme', t), theme);
+			await page.goto(base3 + '/', { waitUntil: 'networkidle' });
+			const found = await page.evaluate(() => ({
+				versions: [...document.querySelectorAll('starlight-version-select option')].map((o) => o.textContent.trim()),
+				themes: document.querySelectorAll('starlight-theme-select select').length,
+			}));
+			if (found.versions.length < 2) problems.push(`${theme}: version select options are ${found.versions}`);
+			if (!found.themes) problems.push(`${theme}: no theme select next to the version select`);
+		}
+		const select = page.locator('starlight-version-select select').first();
+		if ((await select.locator('option').count()) >= 2) {
+			const target = await select.locator('option').nth(1).getAttribute('value');
+			await Promise.all([page.waitForURL(`**${target}`), select.selectOption({ index: 1 })]);
+			const notice = await page.locator('.sl-banner, [class*=version]').count();
+			if (!new URL(page.url()).pathname.startsWith(target)) problems.push(`choosing a version went to ${page.url()}`);
+			if (!notice) problems.push('the page of an earlier version has no version notice');
+		}
+		await page.close();
+	} finally {
+		await browser3.close();
+		server3.close();
+	}
+	console.log(`${problems.length ? 'FAIL' : 'ok  '} version select: options, next to the theme select, goes to the version`);
+	for (const p of problems) console.log(`       ${p}`);
+	failures += problems.length;
+}
+
 if (failures) {
 	console.error(`${failures} problem(s)`);
 	process.exit(1);

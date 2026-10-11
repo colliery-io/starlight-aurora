@@ -7,7 +7,9 @@ export interface AuroraOptions {
 
 export function auroraCss(options?: AuroraOptions): string[];
 
-export function auroraComponents(options?: AuroraOptions): Record<string, string>;
+export function auroraComponents(options?: AuroraOptions, context?: { versions?: boolean }): Record<string, string>;
+
+export function usesVersions(config: { plugins?: Array<{ name?: string }> }): boolean;
 
 export const codeStyleOverrides: Record<string, string>;
 

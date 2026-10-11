@@ -1,0 +1,12 @@
+---
+// The theme select of hyper with the version select of starlight-versions.
+// The plugin uses it when hyper is on and the site also uses
+// starlight-versions: both replace Starlight's ThemeSelect, and
+// starlight-versions asks a plugin that replaces it to render its
+// VersionSelect.
+import VersionSelect from 'starlight-versions/components/VersionSelect.astro';
+import ThemeSelect from './ThemeSelect.astro';
+---
+
+<VersionSelect />
+<ThemeSelect />

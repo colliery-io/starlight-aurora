@@ -63,6 +63,12 @@ To offer Aurora's hyper theme, give the plugin the option `hyper: true` in
 plugins: [starlightAurora({ hyper: true })],
 ```
 
+## Versioned docs
+
+To keep the docs of each release, with a version select, add
+[starlight-versions](https://starlight-versions.vercel.app). See
+https://colliery-io.github.io/starlight-aurora/how-to/versioned-docs/.
+
 ## API reference
 
 Do not put the rustdoc or the Python API docs in this site. Link to them from
