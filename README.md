@@ -31,7 +31,20 @@ export default defineConfig({
 
 | Option | Default | What it does |
 |---|---|---|
-| `hyper` | `false` | Loads Aurora's hyper theme |
+| `hyper` | `false` | Loads Aurora's hyper theme and adds Hyper to the theme select |
+
+With `hyper: true` the plugin replaces Starlight's `ThemeProvider` and
+`ThemeSelect`. A site that replaces either of them too gets an error. Under
+hyper, code blocks use the dark code theme.
+
+## What the theme does
+
+- Maps Starlight's colour, shadow and font variables onto Aurora's tokens
+  (`styles/theme.css`). Light, dark and auto all come from one mapping,
+  because Aurora's tokens are `light-dark()` pairs.
+- Gives code blocks Aurora's fonts and radius. Your own
+  `expressiveCode.styleOverrides` win.
+- Your own `customCss` loads after the theme, so it wins.
 
 ## Aurora CSS
 
@@ -45,7 +58,7 @@ npm test                 # unit tests
 npm run check:vendor     # vendored CSS matches the Aurora tag
 npm --prefix demo ci     # install the demo site
 npm run demo:dev         # serve the demo site
-npm run demo:build && npm run demo:check
+npm run demo:build && npm run demo:check   # needs Chrome
 ```
 
 ## Licence

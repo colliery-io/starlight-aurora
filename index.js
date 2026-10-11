@@ -8,7 +8,37 @@ const PKG = 'starlight-aurora';
 export function auroraCss(options = {}) {
 	const css = [`${PKG}/styles/layers.css`, `${PKG}/styles/aurora.css`];
 	if (options.hyper) css.push(`${PKG}/styles/hyper.css`);
+	css.push(`${PKG}/styles/theme.css`);
 	return css;
+}
+
+/** Starlight components that the plugin replaces. Only hyper needs any. */
+export function auroraComponents(options = {}) {
+	if (!options.hyper) return {};
+	return {
+		ThemeProvider: `${PKG}/components/ThemeProvider.astro`,
+		ThemeSelect: `${PKG}/components/ThemeSelect.astro`,
+	};
+}
+
+/** Code-block styles from Aurora's tokens. The site's own overrides win. */
+export const codeStyleOverrides = {
+	codeFontFamily: 'var(--font-mono)',
+	uiFontFamily: 'var(--font-sans)',
+	borderRadius: 'var(--radius-md)',
+};
+
+/**
+ * Starlight's `expressiveCode` option with Aurora's code-block styles merged
+ * in. A site that turns code blocks off (false) keeps them off.
+ */
+export function auroraExpressiveCode(userConfig) {
+	if (userConfig === false) return false;
+	const user = userConfig === true || userConfig === undefined ? {} : userConfig;
+	return {
+		...user,
+		styleOverrides: { ...codeStyleOverrides, ...(user.styleOverrides ?? {}) },
+	};
 }
 
 /**
@@ -23,8 +53,16 @@ export default function starlightAurora(options = {}) {
 		name: PKG,
 		hooks: {
 			'config:setup'({ config, updateConfig }) {
+				const components = auroraComponents(opts);
+				for (const name of Object.keys(components)) {
+					if (config.components?.[name]) {
+						throw new Error(`starlight-aurora: hyper replaces the ${name} component, and the site replaces it too. Remove one.`);
+					}
+				}
 				updateConfig({
 					customCss: [...auroraCss(opts), ...(config.customCss ?? [])],
+					expressiveCode: auroraExpressiveCode(config.expressiveCode),
+					components: { ...config.components, ...components },
 				});
 			},
 		},

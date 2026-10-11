@@ -13,6 +13,8 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 22
+      - name: Install
+        run: npm ci --no-audit --no-fund
       - name: Unit tests
         run: npm test
       - name: Vendored Aurora CSS matches its tag
@@ -21,4 +23,15 @@ jobs:
         run: |
           npm --prefix demo ci --no-audit --no-fund
           npm run demo:build
-          npm run demo:check
+      - name: Check the demo site in Chrome (layers, tokens, contrast)
+        run: npm run demo:check
+      - name: Build and check the demo site with hyper
+        run: |
+          (cd demo && AURORA_HYPER=1 npx astro build --outDir dist-hyper)
+          npm run demo:check:hyper
+      - name: Screenshots
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: screenshots
+          path: screenshots/

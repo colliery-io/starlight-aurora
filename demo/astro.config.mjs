@@ -3,6 +3,8 @@ import starlight from '@astrojs/starlight';
 import starlightAurora from 'starlight-aurora';
 
 export default defineConfig({
+	site: 'https://colliery-io.github.io',
+	base: '/',
 	integrations: [
 		starlight({
 			title: 'starlight-aurora',
