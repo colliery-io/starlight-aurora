@@ -3,7 +3,7 @@
 //  - Starlight's background and body font are Aurora's.
 // It writes a screenshot of each page in each theme to screenshots/.
 //
-//   node scripts/check-site.mjs demo/dist [--hyper]
+//   node scripts/check-site.mjs docs/dist [--hyper]
 import { createServer } from 'node:http';
 import { mkdir, readdir, readFile, stat } from 'node:fs/promises';
 import { extname, join, normalize } from 'node:path';
@@ -14,7 +14,7 @@ const require = createRequire(import.meta.url);
 const AXE = await readFile(require.resolve('axe-core/axe.min.js'), 'utf8');
 
 const args = process.argv.slice(2);
-const dist = args.find((a) => !a.startsWith('--')) ?? 'demo/dist';
+const dist = args.find((a) => !a.startsWith('--')) ?? 'docs/dist';
 // Each case: the stored choice, the OS setting, and the theme that must show.
 const themes = [
 	{ name: 'light', stored: 'light', os: 'dark', shows: 'light' },
@@ -108,9 +108,19 @@ if (args.includes('--hyper')) {
 	const base2 = `http://127.0.0.1:${server2.address().port}`;
 	const problems = [];
 	try {
+		// A page with a code block, to check the code theme under hyper.
+		let codePage;
+		for (const path of await pages()) {
+			const html = await readFile(join(await resolveFile(path)), 'utf8');
+			if (html.includes('class="expressive-code')) {
+				codePage = path;
+				break;
+			}
+		}
+		if (!codePage) throw new Error(`${dist}: no page has a code block`);
 		const context = await browser2.newContext({ colorScheme: 'light' });
 		const page = await context.newPage();
-		await page.goto(base2 + '/', { waitUntil: 'networkidle' });
+		await page.goto(base2 + codePage, { waitUntil: 'networkidle' });
 		const select = page.locator('starlight-theme-select select').first();
 		const values = await select.locator('option').evaluateAll((os) => os.map((o) => o.value));
 		if (values.join() !== 'light,dark,hyper,auto') problems.push(`toggle choices are ${values}`);

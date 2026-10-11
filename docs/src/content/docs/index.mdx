@@ -1,0 +1,32 @@
+---
+title: starlight-aurora
+description: Aurora, the Colliery design system, as a theme for Astro Starlight.
+template: splash
+hero:
+  tagline: Aurora, the Colliery design system, as a theme for Astro Starlight. The Colliery docs look like the Colliery products.
+  actions:
+    - text: Start a docs site
+      link: tutorials/first-site/
+      icon: right-arrow
+    - text: See each component
+      link: reference/gallery/
+      variant: minimal
+---
+
+import { Card, CardGrid } from '@astrojs/starlight/components';
+import StatusBadge from 'starlight-aurora/components/StatusBadge.astro';
+
+<CardGrid>
+	<Card title="Aurora's tokens" icon="seti:css">
+		Starlight's colours, fonts and shadows come from Aurora's tokens, unedited, at a tagged Aurora release.
+	</Card>
+	<Card title="Four themes" icon="star">
+		Light, dark and auto, and Aurora's hyper theme when a site opts in. This site opts in: try the theme select.
+	</Card>
+	<Card title="Aurora's components" icon="puzzle">
+		Aurora's status badge: <StatusBadge status="running" /> <StatusBadge status="completed" /> <StatusBadge status="failed" />
+	</Card>
+	<Card title="A starter" icon="rocket">
+		A docs site to copy: the Diátaxis sections, Mermaid, an angreal task and a GitHub Pages workflow.
+	</Card>
+</CardGrid>

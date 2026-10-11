@@ -1,0 +1,35 @@
+---
+title: Show a status
+description: Put Aurora's status badge in a page.
+sidebar:
+  order: 3
+---
+
+import StatusBadge from 'starlight-aurora/components/StatusBadge.astro';
+
+## Procedure
+
+1. Use an `.mdx` page. A `.md` page cannot import a component.
+2. Import the badge below the front matter:
+
+   ```mdx
+   import StatusBadge from 'starlight-aurora/components/StatusBadge.astro';
+   ```
+
+3. Put the badge in the text:
+
+   ```mdx
+   The deploy is <StatusBadge status="running" />.
+   ```
+
+   The result: the deploy is <StatusBadge status="running" />.
+
+4. To give a status that Aurora does not know a hue, add `hue`:
+
+   ```mdx
+   <StatusBadge status="healthy" hue="ok" />
+   ```
+
+   The result: <StatusBadge status="healthy" hue="ok" />
+
+The statuses and the hues are in [the component reference](../../reference/components/).
