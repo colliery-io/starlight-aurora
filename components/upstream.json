@@ -1,0 +1,8 @@
+{
+  "package": "@astrojs/starlight",
+  "version": "0.42.6",
+  "files": {
+    "dist/components/ThemeProvider.astro": "73c34f1229e93ad249a05371d9003d1afa21938c8fe83301d4d9382ab81712ae",
+    "dist/components/ThemeSelect.astro": "eb2256fe869a33d0328bee6e9fd31c0b5770ab7fe6c3b752c9961d56a625e10e"
+  }
+}

@@ -4,6 +4,10 @@ on:
   push:
     branches: [main]
   pull_request:
+  # Weekly, so a new Starlight release that changes the components hyper
+  # copies is found without a pull request.
+  schedule:
+    - cron: "17 6 * * 1"
 
 jobs:
   check:
@@ -19,6 +23,8 @@ jobs:
         run: npm test
       - name: Vendored Aurora CSS matches its tag
         run: npm run check:vendor
+      - name: The Starlight components that hyper copies are unchanged in the newest Starlight
+        run: npm run check:upstream
       - name: Build the docs site
         run: |
           npm --prefix docs ci --no-audit --no-fund
