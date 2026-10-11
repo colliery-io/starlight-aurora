@@ -79,6 +79,35 @@ try {
 					slFont: root.getPropertyValue('--sl-font').trim(),
 				};
 			});
+			// Diagrams: wait for Mermaid to draw them, then check that a node and
+			// a line have Aurora's colours in this theme.
+			const diagrams = await page.locator('pre.mermaid').count();
+			if (diagrams) {
+				await page
+					.waitForFunction((n) => document.querySelectorAll('pre.mermaid svg').length >= n, diagrams, { timeout: 20000 })
+					.catch(() => {});
+				found.mermaid = await page.evaluate(() => {
+					const probe = (value) => {
+						const el = document.createElement('div');
+						el.style.color = value;
+						document.body.append(el);
+						const c = getComputedStyle(el).color;
+						el.remove();
+						return c;
+					};
+					const svg = document.querySelector('pre.mermaid svg');
+					if (!svg) return { drawn: false };
+					const node = svg.querySelector('.node rect, .node polygon, rect.actor');
+					const line = svg.querySelector('.edgePaths path, .messageLine0, .relation, .transition');
+					return {
+						drawn: true,
+						node: node && getComputedStyle(node).fill,
+						panel: probe('var(--panel)'),
+						line: line && getComputedStyle(line).stroke,
+						edge: probe('var(--edge)'),
+					};
+				});
+			}
 			await page.addScriptTag({ content: AXE });
 			const axe = await page.evaluate(() => axe.run(document, { runOnly: ['color-contrast'] }));
 			const name = `${theme.name}${path.replace(/\/$/, '').replace(/\//g, '_') || '_index'}.png`;
@@ -88,6 +117,14 @@ try {
 			if (shown !== theme.shows) problems.push(`data-theme is ${shown}, not ${theme.shows}`);
 			if (found.bodyBg !== found.auroraBg) problems.push(`body background ${found.bodyBg} is not Aurora --bg ${found.auroraBg}`);
 			if (!found.font.includes('IBM Plex Sans')) problems.push(`body font is ${found.font}`);
+			if (found.mermaid) {
+				const m = found.mermaid;
+				if (!m.drawn) problems.push('mermaid: no diagram was drawn');
+				else {
+					if (m.node !== m.panel) problems.push(`mermaid: node fill ${m.node} is not Aurora --panel ${m.panel}`);
+					if (m.line !== m.edge) problems.push(`mermaid: line ${m.line} is not Aurora --edge ${m.edge}`);
+				}
+			}
 			for (const v of axe.violations) for (const n of v.nodes) problems.push(`contrast: ${n.target.join(' ')}: ${n.any[0]?.message ?? v.help}`);
 			failures += problems.length;
 			console.log(`${problems.length ? 'FAIL' : 'ok  '} ${theme.name.padEnd(10)} ${path}`);

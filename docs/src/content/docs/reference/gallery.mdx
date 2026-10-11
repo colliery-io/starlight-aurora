@@ -130,3 +130,38 @@ flowchart LR
     D --> F[Dark]
     D --> G[Hyper]
 ```
+
+```mermaid
+sequenceDiagram
+    participant S as Site
+    participant P as Plugin
+    participant A as Aurora
+    S->>P: config:setup
+    P->>A: read tokens.css
+    Note over P,A: unedited, at a tag
+    A-->>P: tokens
+    P-->>S: customCss
+```
+
+```mermaid
+classDiagram
+    class Theme {
+        +String name
+        +bool darkBase
+    }
+    class Plugin {
+        +hyper bool
+        +customCss()
+    }
+    Plugin --> Theme : chooses
+```
+
+```mermaid
+stateDiagram-v2
+    [*] --> Auto
+    Auto --> Light
+    Auto --> Dark
+    Light --> Hyper
+    Dark --> Hyper
+    Hyper --> [*]
+```

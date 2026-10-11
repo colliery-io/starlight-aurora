@@ -18,13 +18,14 @@ test('the plugin puts the Aurora CSS before the site CSS', () => {
 		'starlight-aurora/styles/layers.css',
 		'starlight-aurora/styles/aurora.css',
 		'starlight-aurora/styles/theme.css',
+		'starlight-aurora/styles/mermaid.css',
 		'./src/site.css',
 	]);
 });
 
 test('a site with no custom CSS gets the Aurora CSS', () => {
 	const update = setup(starlightAurora(), {});
-	assert.equal(update.customCss.length, 3);
+	assert.equal(update.customCss.length, 4);
 });
 
 test('hyper is off by default and adds its stylesheet when on', () => {
@@ -49,11 +50,13 @@ test('a site with code blocks off keeps them off', () => {
 	assert.equal(setup(starlightAurora(), { expressiveCode: false }).expressiveCode, false);
 });
 
-test('theme.css has no raw colours: each value is an Aurora token', () => {
-	const css = readFileSync(pkgFile('starlight-aurora/styles/theme.css'), 'utf8').replace(/\/\*[\s\S]*?\*\//g, '');
-	const raw = css.match(/#[0-9a-f]{3,8}\b|\b(rgba?|hsla?|oklch|oklab|lab|lch)\(/gi);
-	assert.equal(raw, null, `raw colours: ${raw}`);
-});
+for (const file of ['theme.css', 'mermaid.css']) {
+	test(`${file} has no raw colours: each value is an Aurora token`, () => {
+		const css = readFileSync(pkgFile(`starlight-aurora/styles/${file}`), 'utf8').replace(/\/\*[\s\S]*?\*\//g, '');
+		const raw = css.match(/#[0-9a-f]{3,8}\b|\b(rgba?|hsla?|oklch|oklab|lab|lch)\(/gi);
+		assert.equal(raw, null, `raw colours: ${raw}`);
+	});
+}
 
 test('theme.css maps each Starlight colour variable', () => {
 	const css = readFileSync(pkgFile('starlight-aurora/styles/theme.css'), 'utf8');

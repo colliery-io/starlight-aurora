@@ -8,7 +8,7 @@ const PKG = 'starlight-aurora';
 export function auroraCss(options = {}) {
 	const css = [`${PKG}/styles/layers.css`, `${PKG}/styles/aurora.css`];
 	if (options.hyper) css.push(`${PKG}/styles/hyper.css`);
-	css.push(`${PKG}/styles/theme.css`);
+	css.push(`${PKG}/styles/theme.css`, `${PKG}/styles/mermaid.css`);
 	return css;
 }
 

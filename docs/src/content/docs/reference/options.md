@@ -33,6 +33,7 @@ In this order:
 | `styles/aurora.css` | Aurora's `fonts.css` and `tokens.css`, unedited |
 | `styles/hyper.css` | Aurora's `hyper.css`, unedited. With `hyper: true` only. |
 | `styles/theme.css` | Starlight's variables from Aurora's tokens |
+| `styles/mermaid.css` | Mermaid diagrams in Aurora's colours |
 
 ## Theme choice
 
