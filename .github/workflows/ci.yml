@@ -25,6 +25,10 @@ jobs:
           npm run demo:build
       - name: Check the demo site in Chrome (layers, tokens, contrast)
         run: npm run demo:check
+      - name: Build and check the demo site with hyper
+        run: |
+          (cd demo && AURORA_HYPER=1 npx astro build --outDir dist-hyper)
+          npm run demo:check:hyper
       - name: Screenshots
         if: always()
         uses: actions/upload-artifact@v4

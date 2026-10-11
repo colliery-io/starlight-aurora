@@ -7,6 +7,8 @@ export interface AuroraOptions {
 
 export function auroraCss(options?: AuroraOptions): string[];
 
+export function auroraComponents(options?: AuroraOptions): Record<string, string>;
+
 export const codeStyleOverrides: Record<string, string>;
 
 export function auroraExpressiveCode(userConfig: unknown): unknown;

@@ -31,7 +31,11 @@ export default defineConfig({
 
 | Option | Default | What it does |
 |---|---|---|
-| `hyper` | `false` | Loads Aurora's hyper theme |
+| `hyper` | `false` | Loads Aurora's hyper theme and adds Hyper to the theme select |
+
+With `hyper: true` the plugin replaces Starlight's `ThemeProvider` and
+`ThemeSelect`. A site that replaces either of them too gets an error. Under
+hyper, code blocks use the dark code theme.
 
 ## What the theme does
 

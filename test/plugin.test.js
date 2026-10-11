@@ -2,7 +2,7 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { existsSync, readFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
-import starlightAurora, { auroraCss, auroraExpressiveCode, codeStyleOverrides } from '../index.js';
+import starlightAurora, { auroraComponents, auroraCss, auroraExpressiveCode, codeStyleOverrides } from '../index.js';
 
 function setup(plugin, config) {
 	let update = {};
@@ -62,4 +62,21 @@ test('theme.css maps each Starlight colour variable', () => {
 		'bg-sidebar', 'bg-inline-code', 'bg-accent', 'hairline-light', 'hairline', 'hairline-shade', 'backdrop-overlay'];
 	for (const hue of ['blue', 'purple', 'orange', 'red', 'green']) required.push(`${hue}-low`, hue, `${hue}-high`);
 	for (const name of required) assert.match(css, new RegExp(`--sl-color-${name}:\\s*var\\(--`), name);
+});
+
+test('hyper off replaces no Starlight component', () => {
+	assert.deepEqual(auroraComponents(), {});
+	assert.deepEqual(setup(starlightAurora(), {}).components, {});
+});
+
+test('hyper on replaces the theme provider and select, and keeps the site components', () => {
+	const update = setup(starlightAurora({ hyper: true }), { components: { Footer: './src/Footer.astro' } });
+	assert.equal(update.components.ThemeSelect, 'starlight-aurora/components/ThemeSelect.astro');
+	assert.equal(update.components.ThemeProvider, 'starlight-aurora/components/ThemeProvider.astro');
+	assert.equal(update.components.Footer, './src/Footer.astro');
+	for (const spec of Object.values(auroraComponents({ hyper: true }))) assert.ok(existsSync(pkgFile(spec)), spec);
+});
+
+test('hyper on and a site ThemeSelect of its own is an error', () => {
+	assert.throws(() => setup(starlightAurora({ hyper: true }), { components: { ThemeSelect: './x.astro' } }), /ThemeSelect/);
 });

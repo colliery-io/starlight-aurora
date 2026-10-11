@@ -1,0 +1,67 @@
+---
+// Starlight's ThemeProvider, with Aurora's hyper theme. The plugin uses it
+// only when `hyper: true`. The choice stays in Starlight's key
+// `starlight-theme`.
+import { Icon } from '@astrojs/starlight/components';
+---
+
+{/* Inline, so that the first paint has the right theme. */}
+<script is:inline>
+	window.StarlightThemeProvider = (() => {
+		const stored = typeof localStorage !== 'undefined' && localStorage.getItem('starlight-theme');
+		const theme =
+			stored || (window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark');
+		document.documentElement.dataset.theme =
+			theme === 'light' || theme === 'hyper' ? theme : 'dark';
+
+		// Expressive Code knows only light and dark, and gives every root theme
+		// but 'dark' its light code theme. Under hyper, each code block gets
+		// data-theme="dark", which Expressive Code honours per block. The
+		// attribute data-aurora-code marks the blocks that this script changed.
+		const syncCode = (shown) => {
+			document.querySelectorAll('.expressive-code').forEach((el) => {
+				if (shown === 'hyper') {
+					if (!el.dataset.theme) {
+						el.dataset.theme = 'dark';
+						el.dataset.auroraCode = '';
+					}
+				} else if ('auroraCode' in el.dataset) {
+					delete el.dataset.theme;
+					delete el.dataset.auroraCode;
+				}
+			});
+		};
+		// Mark the blocks while the page parses, so that no light code shows.
+		if (theme === 'hyper') {
+			const observer = new MutationObserver(() => syncCode('hyper'));
+			observer.observe(document.documentElement, { childList: true, subtree: true });
+			document.addEventListener('DOMContentLoaded', () => {
+				observer.disconnect();
+				syncCode(document.documentElement.dataset.theme);
+			});
+		}
+
+		return {
+			syncCode,
+			updatePickers(theme = stored || 'auto') {
+				document.querySelectorAll('starlight-theme-select').forEach((picker) => {
+					const select = picker.querySelector('select');
+					if (select) select.value = theme;
+					const tmpl = document.querySelector('#theme-icons');
+					const newIcon = tmpl && tmpl.content.querySelector('.' + theme);
+					if (newIcon) {
+						const oldIcon = picker.querySelector('svg.label-icon');
+						if (oldIcon) oldIcon.replaceChildren(...newIcon.cloneNode(true).childNodes);
+					}
+				});
+			},
+		};
+	})();
+</script>
+
+<template id="theme-icons">
+	<Icon name="sun" class="light" />
+	<Icon name="moon" class="dark" />
+	<Icon name="star" class="hyper" />
+	<Icon name="laptop" class="auto" />
+</template>

@@ -11,12 +11,14 @@
       "default": "./index.js"
     },
     "./styles/*": "./styles/*",
-    "./vendor/*": "./vendor/*"
+    "./vendor/*": "./vendor/*",
+    "./components/*": "./components/*"
   },
   "files": [
     "index.js",
     "index.d.ts",
     "styles",
+    "components",
     "vendor"
   ],
   "peerDependencies": {
@@ -28,7 +30,9 @@
     "vendor:update": "node scripts/vendor.mjs update",
     "demo:build": "npm --prefix demo run build",
     "demo:dev": "npm --prefix demo run dev",
-    "demo:check": "node scripts/check-build.mjs demo/dist && node scripts/check-site.mjs demo/dist"
+    "demo:check": "node scripts/check-build.mjs demo/dist && node scripts/check-site.mjs demo/dist",
+    "demo:build:hyper": "cd demo && AURORA_HYPER=1 npx astro build --outDir dist-hyper",
+    "demo:check:hyper": "node scripts/check-build.mjs demo/dist-hyper && node scripts/check-site.mjs demo/dist-hyper --hyper"
   },
   "devDependencies": {
     "axe-core": "^4.14.0",

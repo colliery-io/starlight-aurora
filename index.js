@@ -12,6 +12,15 @@ export function auroraCss(options = {}) {
 	return css;
 }
 
+/** Starlight components that the plugin replaces. Only hyper needs any. */
+export function auroraComponents(options = {}) {
+	if (!options.hyper) return {};
+	return {
+		ThemeProvider: `${PKG}/components/ThemeProvider.astro`,
+		ThemeSelect: `${PKG}/components/ThemeSelect.astro`,
+	};
+}
+
 /** Code-block styles from Aurora's tokens. The site's own overrides win. */
 export const codeStyleOverrides = {
 	codeFontFamily: 'var(--font-mono)',
@@ -44,9 +53,16 @@ export default function starlightAurora(options = {}) {
 		name: PKG,
 		hooks: {
 			'config:setup'({ config, updateConfig }) {
+				const components = auroraComponents(opts);
+				for (const name of Object.keys(components)) {
+					if (config.components?.[name]) {
+						throw new Error(`starlight-aurora: hyper replaces the ${name} component, and the site replaces it too. Remove one.`);
+					}
+				}
 				updateConfig({
 					customCss: [...auroraCss(opts), ...(config.customCss ?? [])],
 					expressiveCode: auroraExpressiveCode(config.expressiveCode),
+					components: { ...config.components, ...components },
 				});
 			},
 		},

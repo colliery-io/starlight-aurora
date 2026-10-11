@@ -95,6 +95,47 @@ try {
 	await browser.close();
 	server.close();
 }
+// The hyper toggle: the order of the choices, a choice made in the page, a
+// reload, and dark code blocks.
+if (args.includes('--hyper')) {
+	const browser2 = await chromium.launch({ channel: 'chrome' });
+	const server2 = createServer(server.listeners('request')[0]);
+	await new Promise((r) => server2.listen(0, '127.0.0.1', r));
+	const base2 = `http://127.0.0.1:${server2.address().port}`;
+	const problems = [];
+	try {
+		const context = await browser2.newContext({ colorScheme: 'light' });
+		const page = await context.newPage();
+		await page.goto(base2 + '/', { waitUntil: 'networkidle' });
+		const select = page.locator('starlight-theme-select select').first();
+		const values = await select.locator('option').evaluateAll((os) => os.map((o) => o.value));
+		if (values.join() !== 'light,dark,hyper,auto') problems.push(`toggle choices are ${values}`);
+		await select.selectOption('hyper');
+		if ((await page.evaluate(() => document.documentElement.dataset.theme)) !== 'hyper') problems.push('choosing Hyper did not show hyper');
+		await page.reload({ waitUntil: 'networkidle' });
+		const after = await page.evaluate(() => ({
+			theme: document.documentElement.dataset.theme,
+			picked: document.querySelector('starlight-theme-select select')?.value,
+			code: getComputedStyle(document.querySelector('.expressive-code pre')).backgroundColor,
+			codeTheme: document.querySelector('.expressive-code')?.dataset.theme,
+		}));
+		if (after.theme !== 'hyper' || after.picked !== 'hyper') problems.push(`after a reload: theme ${after.theme}, picker ${after.picked}`);
+		const [r, g, b] = after.code.match(/\d+/g).map(Number);
+		if (r + g + b > 3 * 64) problems.push(`code block background ${after.code} is not dark`);
+		if (after.codeTheme !== 'dark') problems.push(`code block data-theme is ${after.codeTheme}`);
+		await select.selectOption('light');
+		const back = await page.evaluate(() => document.querySelector('.expressive-code')?.dataset.theme);
+		if (back !== undefined) problems.push(`after Light, the code block keeps data-theme ${back}`);
+		await context.close();
+	} finally {
+		await browser2.close();
+		server2.close();
+	}
+	console.log(`${problems.length ? 'FAIL' : 'ok  '} hyper toggle: choices, choice, reload, dark code, back to light`);
+	for (const p of problems) console.log(`       ${p}`);
+	failures += problems.length;
+}
+
 if (failures) {
 	console.error(`${failures} problem(s)`);
 	process.exit(1);
