@@ -1,3 +1,4 @@
+#!/usr/bin/env node
 // Checks the internal links of a built site: each href, src and refresh
 // target of each page must reach a file of the site, and each #anchor an id
 // on the target page. The site is read as it would be served under `base`.

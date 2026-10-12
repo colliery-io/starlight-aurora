@@ -53,3 +53,31 @@ test('a check run through a symlinked path still checks, and fails on a broken s
 		rmSync(dir, { recursive: true, force: true });
 	}
 });
+
+test('--name=value options are read, and --base=/x/ works too', async () => {
+	const { parseArgs } = await import('../scripts/cli.mjs');
+	const got = parseArgs(['site', '--shard=2/4', '--jobs=8', '--base=/x', '--hyper']);
+	assert.deepEqual(got.values, { shard: '2/4', jobs: '8' });
+	assert.equal(got.base, '/x/');
+	assert.equal(got.dist, 'site');
+	assert.ok(got.flags.has('hyper'));
+});
+
+test('a shard takes every nth page, and the shards cover each page once', async () => {
+	const { shard } = await import('../scripts/cli.mjs');
+	const list = ['a', 'b', 'c', 'd', 'e'];
+	assert.deepEqual(shard(list, '1/2'), ['a', 'c', 'e']);
+	assert.deepEqual(shard(list, '2/2'), ['b', 'd']);
+	assert.deepEqual(shard(list, undefined), list);
+	assert.deepEqual([...shard(list, '1/3'), ...shard(list, '2/3'), ...shard(list, '3/3')].sort(), list);
+	assert.throws(() => shard(list, '3/2'), /i\/n/);
+});
+
+test('a redirect page is told from a real page', async () => {
+	const { isRedirectPage } = await import('../scripts/cli.mjs');
+	const { redirectPage } = await import('../redirects.js');
+	assert.equal(isRedirectPage(redirectPage('x/')), true);
+	assert.equal(isRedirectPage('<meta http-equiv="refresh" content="0;url=/x/"><meta name="robots" content="noindex">'), true);
+	assert.equal(isRedirectPage('<html><head><title>A page</title></head></html>'), false);
+	assert.equal(isRedirectPage('<meta name="robots" content="noindex">'), false);
+});
