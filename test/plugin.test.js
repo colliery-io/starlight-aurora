@@ -6,7 +6,7 @@ import starlightAurora, { auroraComponents, auroraCss, auroraExpressiveCode, cod
 
 function setup(plugin, config) {
 	let update = {};
-	plugin.hooks['config:setup']({ config, updateConfig: (u) => (update = { ...update, ...u }) });
+	plugin.hooks['config:setup']({ config, updateConfig: (u) => (update = { ...update, ...u }), addIntegration: () => {} });
 	return update;
 }
 
@@ -19,13 +19,14 @@ test('the plugin puts the Aurora CSS before the site CSS', () => {
 		'starlight-aurora/styles/aurora.css',
 		'starlight-aurora/styles/theme.css',
 		'starlight-aurora/styles/mermaid.css',
+		'starlight-aurora/styles/badges.css',
 		'./src/site.css',
 	]);
 });
 
 test('a site with no custom CSS gets the Aurora CSS', () => {
 	const update = setup(starlightAurora(), {});
-	assert.equal(update.customCss.length, 4);
+	assert.equal(update.customCss.length, 5);
 });
 
 test('hyper is off by default and adds its stylesheet when on', () => {
@@ -50,7 +51,7 @@ test('a site with code blocks off keeps them off', () => {
 	assert.equal(setup(starlightAurora(), { expressiveCode: false }).expressiveCode, false);
 });
 
-for (const file of ['theme.css', 'mermaid.css']) {
+for (const file of ['theme.css', 'mermaid.css', 'badges.css']) {
 	test(`${file} has no raw colours: each value is an Aurora token`, () => {
 		const css = readFileSync(pkgFile(`starlight-aurora/styles/${file}`), 'utf8').replace(/\/\*[\s\S]*?\*\//g, '');
 		const raw = css.match(/#[0-9a-f]{3,8}\b|\b(rgba?|hsla?|oklch|oklab|lab|lch)\(/gi);
@@ -117,4 +118,26 @@ test('the starter and the docs install the version that package.json declares', 
 		const text = readFileSync(new URL(file, import.meta.url), 'utf8');
 		for (const m of text.matchAll(/starlight-aurora#(v[\d.]+)/g)) assert.equal(m[1], tag, file);
 	}
+});
+
+test('code blocks do not take a first-line path comment as a title, unless the site says so', () => {
+	assert.equal(auroraExpressiveCode(undefined).frames.extractFileNameFromCode, false);
+	assert.equal(auroraExpressiveCode({ frames: { extractFileNameFromCode: true } }).frames.extractFileNameFromCode, true);
+	assert.equal(auroraExpressiveCode({ frames: { showCopyToClipboardButton: false } }).frames.showCopyToClipboardButton, false);
+	assert.equal(auroraExpressiveCode({ frames: false }).frames, false);
+});
+
+test('badges.css styles each hue that status.js knows', async () => {
+	const { HUES } = await import('../components/status.js');
+	const css = readFileSync(pkgFile('starlight-aurora/styles/badges.css'), 'utf8');
+	for (const h of HUES) assert.match(css, new RegExp(`data-hue='${h}'\\] \\{ --sa-fill: var\\(--${h}-bg\\); --sa-text: var\\(--${h}-fg\\); \\}`), h);
+});
+
+test('the plugin adds the C4 colour script to each page', () => {
+	const added = [];
+	starlightAurora().hooks['config:setup']({ config: {}, updateConfig: () => {}, addIntegration: (i) => added.push(i) });
+	assert.equal(added.length, 1);
+	const scripts = [];
+	added[0].hooks['astro:config:setup']({ injectScript: (stage, code) => scripts.push([stage, code]) });
+	assert.deepEqual(scripts, [['page', "import 'starlight-aurora/c4-colours.js';"]]);
 });

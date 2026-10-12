@@ -8,10 +8,10 @@ complete and dry.
 
 ## API reference
 
-The API reference is generated from the code and published with it:
+The API reference is generated from the code by plissken, under
+Reference → API reference. The rustdoc is on docs.rs:
 
 - Rust: CHANGE — `https://docs.rs/<crate>`
-- Python: CHANGE — the link to the Python API docs
 
 ## Configuration
 

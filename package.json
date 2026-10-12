@@ -1,6 +1,6 @@
 {
   "name": "starlight-aurora",
-  "version": "0.2.1",
+  "version": "0.3.0",
   "description": "Aurora, the Colliery design system, as an Astro Starlight theme",
   "license": "Apache-2.0",
   "repository": "github:colliery-io/starlight-aurora",
@@ -16,7 +16,13 @@
     "./mdbook-redirects": {
       "types": "./mdbook-redirects.d.ts",
       "default": "./mdbook-redirects.js"
-    }
+    },
+    "./redirects": {
+      "types": "./redirects.d.ts",
+      "default": "./redirects.js"
+    },
+    "./c4-colours.js": "./c4-colours.js",
+    "./scripts/*": "./scripts/*"
   },
   "files": [
     "index.js",
@@ -25,11 +31,20 @@
     "components",
     "vendor",
     "mdbook-redirects.js",
-    "mdbook-redirects.d.ts"
+    "mdbook-redirects.d.ts",
+    "redirects.js",
+    "redirects.d.ts",
+    "c4-colours.js",
+    "scripts/check-links.mjs",
+    "scripts/check-site.mjs",
+    "scripts/cli.mjs",
+    "scripts/mdbook-to-starlight.mjs"
   ],
   "peerDependencies": {
     "@astrojs/starlight": ">=0.42.0",
-    "starlight-versions": ">=0.10.0"
+    "starlight-versions": ">=0.10.0",
+    "playwright-core": ">=1.40.0",
+    "axe-core": ">=4.0.0"
   },
   "scripts": {
     "test": "node --test test/*.test.js",
@@ -49,6 +64,17 @@
   "peerDependenciesMeta": {
     "starlight-versions": {
       "optional": true
+    },
+    "playwright-core": {
+      "optional": true
+    },
+    "axe-core": {
+      "optional": true
     }
+  },
+  "bin": {
+    "starlight-aurora-check-links": "scripts/check-links.mjs",
+    "starlight-aurora-check-site": "scripts/check-site.mjs",
+    "starlight-aurora-from-mdbook": "scripts/mdbook-to-starlight.mjs"
   }
 }

@@ -43,8 +43,21 @@ theme select. This site uses it: the select shows Latest and v0.1.
 
 4. Build the site. The first build with a new version copies the current docs
    into `src/content/docs/1.0/` and writes `src/content/versions/1.0.json`.
-5. Commit the new files. From now on, change only the current docs.
+5. Compare the copy with the current pages, and commit the new files. From now
+   on, change only the current docs.
+
+   starlight-versions writes the copied pages again without GitHub tables'
+   escapes, and reads them as MDX: `\|` in a table cell splits the cell, and
+   `<`, `{` or `}` in text stops the build. Fix the copy by hand, or copy the
+   source pages over it and add the `slug:` line that it wrote.
 6. At the next release, add its slug at the start of `versions` and build again.
+
+## Old versions from before the move
+
+A Pages deploy from a workflow replaces the whole site. To keep an old
+version folder that the new site does not build (an mdBook copy, for example),
+build it in the docs workflow on each deploy and put it in the uploaded site,
+as GraphQLite does for its v0.9.2 mdBook docs.
 
 ## With hyper
 

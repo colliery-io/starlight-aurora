@@ -59,7 +59,7 @@ fn main() {
 ```
 
 ```sh
-npm install github:colliery-io/starlight-aurora#v0.2.1
+npm install github:colliery-io/starlight-aurora#v0.3.0
 ```
 
 ```diff lang="js"
@@ -164,4 +164,24 @@ stateDiagram-v2
     Light --> Hyper
     Dark --> Hyper
     Hyper --> [*]
+```
+
+```mermaid
+erDiagram
+    SITE ||--o{ PAGE : has
+    PAGE ||--o{ DIAGRAM : shows
+    SITE {
+        string title
+        bool hyper
+    }
+```
+
+```mermaid
+C4Context
+    title The docs of a Colliery product
+    Person(reader, "Reader", "Reads the docs")
+    System(site, "Docs site", "Starlight with starlight-aurora")
+    System_Ext(pages, "GitHub Pages", "Serves the site")
+    Rel(reader, site, "Reads")
+    Rel(pages, site, "Serves")
 ```

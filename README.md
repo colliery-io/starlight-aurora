@@ -11,7 +11,7 @@ theme, hyper on).
 Install the theme from git. Use a tag:
 
 ```sh
-npm install github:colliery-io/starlight-aurora#v0.2.1
+npm install github:colliery-io/starlight-aurora#v0.3.0
 ```
 
 Add the plugin to `astro.config.mjs`:
@@ -73,11 +73,23 @@ Aurora's statuses choose their hue: running (ice), completed (ok), failed
 skipped (skip). Another status is muted. `hue` sets the hue: ice, teal,
 violet, gold, ok, bad, skip or muted.
 
-## Moving from mdBook
+## Moving a site
 
-`starlight-aurora/mdbook-redirects` is an Astro integration that writes a
-redirect page at each old mdBook address (`<path>.html`). See
-https://colliery-io.github.io/starlight-aurora/how-to/move-from-mdbook/.
+- `starlight-aurora/mdbook-redirects` writes a redirect page at each old mdBook
+  address (`<path>.html`).
+- `starlight-aurora/redirects` writes redirect pages for any old address, such
+  as MkDocs and Hugo folder addresses.
+- `starlight-aurora-from-mdbook` converts mdBook pages and makes a sidebar
+  from `SUMMARY.md`.
+
+See https://colliery-io.github.io/starlight-aurora/how-to/move-from-mdbook/ and
+https://colliery-io.github.io/starlight-aurora/how-to/move-from-mkdocs-or-hugo/.
+
+## Checking a site
+
+`starlight-aurora-check-links` and `starlight-aurora-check-site` check a built
+site's links and its look in each theme. See
+https://colliery-io.github.io/starlight-aurora/how-to/check-a-site/.
 
 ## Aurora CSS
 

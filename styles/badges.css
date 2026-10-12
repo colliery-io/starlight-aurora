@@ -1,0 +1,32 @@
+/* Aurora's status badge (aurora-leptos StatusBadge) as a CSS class, so it
+ * works in a plain .md page as well as through the StatusBadge component:
+ *
+ *   <span class="sa-status-badge" data-hue="ok">healthy</span>
+ *
+ * The hue sets the fill and text tokens: ice, teal, violet, gold, ok, bad,
+ * skip or muted. No raw colours: each value is an Aurora token.
+ */
+.sa-status-badge {
+	--sa-fill: var(--muted-bg);
+	--sa-text: var(--muted-fg);
+	display: inline-block;
+	border-radius: var(--radius-pill);
+	padding: 2px 9px;
+	background: var(--sa-fill);
+	color: var(--sa-text);
+	font-family: var(--font-mono);
+	font-size: 10.5px;
+	font-weight: 500;
+	line-height: 1.5;
+	text-transform: lowercase;
+	white-space: nowrap;
+	vertical-align: middle;
+}
+.sa-status-badge[data-hue='ice'] { --sa-fill: var(--ice-bg); --sa-text: var(--ice-fg); }
+.sa-status-badge[data-hue='teal'] { --sa-fill: var(--teal-bg); --sa-text: var(--teal-fg); }
+.sa-status-badge[data-hue='violet'] { --sa-fill: var(--violet-bg); --sa-text: var(--violet-fg); }
+.sa-status-badge[data-hue='gold'] { --sa-fill: var(--gold-bg); --sa-text: var(--gold-fg); }
+.sa-status-badge[data-hue='ok'] { --sa-fill: var(--ok-bg); --sa-text: var(--ok-fg); }
+.sa-status-badge[data-hue='bad'] { --sa-fill: var(--bad-bg); --sa-text: var(--bad-fg); }
+.sa-status-badge[data-hue='skip'] { --sa-fill: var(--skip-bg); --sa-text: var(--skip-fg); }
+.sa-status-badge[data-hue='muted'] { --sa-fill: var(--muted-bg); --sa-text: var(--muted-fg); }

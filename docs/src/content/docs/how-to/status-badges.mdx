@@ -32,4 +32,17 @@ import StatusBadge from 'starlight-aurora/components/StatusBadge.astro';
 
    The result: <StatusBadge status="healthy" hue="ok" />
 
+## In a plain .md page
+
+A `.md` page cannot import a component. Write the badge's HTML:
+
+```md
+The service is <span class="sa-status-badge" data-hue="ok">healthy</span>.
+```
+
+The result: the service is <span class="sa-status-badge" data-hue="ok">healthy</span>.
+
+The theme's CSS styles the class for each hue. Generated pages (plissken) can
+use it too.
+
 The statuses and the hues are in [the component reference](../../reference/components/).

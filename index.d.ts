@@ -16,3 +16,5 @@ export const codeStyleOverrides: Record<string, string>;
 export function auroraExpressiveCode(userConfig: unknown): unknown;
 
 export default function starlightAurora(options?: AuroraOptions): StarlightPlugin;
+
+export function auroraC4Integration(): import('astro').AstroIntegration;

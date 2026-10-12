@@ -8,7 +8,7 @@ const PKG = 'starlight-aurora';
 export function auroraCss(options = {}) {
 	const css = [`${PKG}/styles/layers.css`, `${PKG}/styles/aurora.css`];
 	if (options.hyper) css.push(`${PKG}/styles/hyper.css`);
-	css.push(`${PKG}/styles/theme.css`, `${PKG}/styles/mermaid.css`);
+	css.push(`${PKG}/styles/theme.css`, `${PKG}/styles/mermaid.css`, `${PKG}/styles/badges.css`);
 	return css;
 }
 
@@ -52,6 +52,22 @@ export function auroraExpressiveCode(userConfig) {
 	return {
 		...user,
 		styleOverrides: { ...codeStyleOverrides, ...(user.styleOverrides ?? {}) },
+		// A first-line comment with a path (`# /etc/x.conf`, `# Expected: /home/…`)
+		// is not taken as the block's title: it hid text in two migrated books.
+		// A site turns titles from code back on with `frames: { extractFileNameFromCode: true }`.
+		frames: user.frames === false ? false : { extractFileNameFromCode: false, ...(user.frames ?? {}) },
+	};
+}
+
+/** An Astro integration that adds c4-colours.js to each page. */
+export function auroraC4Integration() {
+	return {
+		name: `${PKG}-c4-colours`,
+		hooks: {
+			'astro:config:setup'({ injectScript }) {
+				injectScript('page', `import '${PKG}/c4-colours.js';`);
+			},
+		},
 	};
 }
 
@@ -66,7 +82,7 @@ export default function starlightAurora(options = {}) {
 	return {
 		name: PKG,
 		hooks: {
-			'config:setup'({ config, updateConfig }) {
+			'config:setup'({ config, updateConfig, addIntegration }) {
 				const components = auroraComponents(opts, { versions: usesVersions(config) });
 				for (const name of Object.keys(components)) {
 					const theirs = config.components?.[name];
@@ -79,6 +95,9 @@ export default function starlightAurora(options = {}) {
 					expressiveCode: auroraExpressiveCode(config.expressiveCode),
 					components: { ...config.components, ...components },
 				});
+				// Mermaid's C4 diagrams set their colours inline, out of reach of CSS:
+				// a page script swaps them for Aurora's tokens (c4-colours.js).
+				addIntegration(auroraC4Integration());
 			},
 		},
 	};
