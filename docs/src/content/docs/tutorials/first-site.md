@@ -23,7 +23,7 @@ You need:
 Get the starter and copy its three parts into the repository:
 
 ```sh
-git clone --depth 1 --branch v0.2.1 https://github.com/colliery-io/starlight-aurora /tmp/starlight-aurora
+git clone --depth 1 --branch v0.3.0 https://github.com/colliery-io/starlight-aurora /tmp/starlight-aurora
 cp -R /tmp/starlight-aurora/template/docs /tmp/starlight-aurora/template/.github /tmp/starlight-aurora/template/.angreal .
 rm -rf /tmp/starlight-aurora
 ```

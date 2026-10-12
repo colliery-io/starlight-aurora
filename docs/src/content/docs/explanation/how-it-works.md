@@ -55,7 +55,16 @@ tokens: nodes on `--panel` with a `--border-control` edge, lines in `--edge`
 (Aurora's graph-edge token), notes in gold, text in `--fg`. The rules use
 `!important`, because Mermaid scopes its own style to the diagram's id. A
 change of theme changes the diagram at once, with no redraw. The rules cover
-flowcharts, sequence, class and state diagrams.
+flowcharts, sequence, class, state and entity-relationship diagrams.
+
+C4 diagrams are different: Mermaid writes their colours into each shape's own
+`style` attribute with `!important`, which no stylesheet can beat. So the
+plugin adds a small page script, `c4-colours.js`. After Mermaid draws a C4
+diagram, it swaps Mermaid's default C4 colours in those attributes for
+Aurora's tokens: people violet, systems ice, containers and components teal,
+external ones muted, text `--fg`. The tokens are CSS variables, so a change of
+theme recolours the diagram too. Colours that a diagram sets itself are left
+alone.
 
 ## The starter
 
